@@ -21,13 +21,15 @@ class AgentController extends GetxController with StateMixin<List> {
   }
 
   //
-  Future<List> getPosteFrontalier() async {
+
+  //
+  Future<List> getAgence() async {
     d.Response rep = await requete.getE(
-      "/api/?_c=poste&_a=select",
+      "ets/select",
     );
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //
-      print("data  ${rep.data}");
+      print("data agence  ${rep.data}");
       return jsonDecode(rep.data);
       //
       //change(rep.data, status: RxStatus.success());
@@ -39,9 +41,9 @@ class AgentController extends GetxController with StateMixin<List> {
   }
 
   //
-  Future<List> getAgence() async {
+  Future<List> getPosteFrontalier() async {
     d.Response rep = await requete.getE(
-      "/api/?_c=agence&_a=select",
+      "poste/select",
     );
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //
@@ -59,7 +61,25 @@ class AgentController extends GetxController with StateMixin<List> {
   //
   Future<List> getPays() async {
     d.Response rep = await requete.getE(
-      "/api/?_c=common&_a=compagnie-list",
+      "common/ays-list",
+    );
+    if (rep.statusCode == 200 || rep.statusCode == 201) {
+      //
+      print("data  ${rep.data}");
+      return jsonDecode(rep.data);
+      //
+      //change(rep.data, status: RxStatus.success());
+    } else {
+      //
+      return [];
+      //change([], status: RxStatus.empty());
+    }
+  }
+
+  //
+  Future<List> getCompagnies() async {
+    d.Response rep = await requete.getE(
+      "common/compagnie-list",
     );
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //
@@ -78,18 +98,21 @@ class AgentController extends GetxController with StateMixin<List> {
   Future<void> enregistrement(Map e) async {
     //pseudo,pwd,profil, etat
     print(e);
-    //?_c=user&_a=select&id_agence=
+    //?_c=user&_a=select&id_ets=
     //&pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&etat=${e['etat']}
+    //&pseudo=${e['pseudo']}
     d.Response rep = await requete.getE(
-        "/api/?_c=user&_a=insert&pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&statut=${e['statut']}&telephone=${e['telephone']}&email=${e['email']}&id_agence=${e['id_agence']}&id_poste=${e['id_poste']}");
+        "user/insert?nom=${e['nom']}&pwd=${e['pwd']}&profil=${e['profil']}&telephone=${e['telephone']}&email=${e['email']}&id_ets=${e['id_ets']}&id_poste=${e['id_poste']}");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
-      print("data: ${rep.data}");
+      print("data: ok ${rep.data}");
+      print("data: ok ${rep.statusCode}");
       //box.write("user", rep.data);
       Get.back();
       Get.snackbar("Succès", "L'enregistrement éffectué !");
       //Get.off(Connexion());
     } else {
-      print("data: ${rep.data}");
+      print("data: erreur ${rep.data}");
+      print("data: erreur ${rep.statusCode}");
       Get.back();
       Get.snackbar("Erreur", "Un problème lors de l'enregistrement");
     }
@@ -99,10 +122,10 @@ class AgentController extends GetxController with StateMixin<List> {
   Future<void> miseajour(Map e) async {
     //pseudo,pwd,profil, etat
     print("maj:: $e");
-    //?_c=user&_a=select&id_agence=
+    //?_c=user&_a=select&id_ets=
     //&pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&etat=${e['etat']}
     d.Response rep = await requete.getE(
-        "/api/?_c=user&_a=update&pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&statut=${e['statut']}&telephone=${e['telephone']}&email=${e['email']}&id_agence=${e['id_agence']}&id_poste=${e['id_poste']}&id=${e['id']}");
+        "user/update?pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&statut=${e['statut']}&telephone=${e['telephone']}&email=${e['email']}&id_ets=${e['id_ets']}&id_poste=${e['id_poste']}&id=${e['id']}");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       print("data: ${rep.data}");
       //box.write("user", rep.data);
@@ -117,15 +140,14 @@ class AgentController extends GetxController with StateMixin<List> {
   }
 
   //
-  Future<void> getAllAgents(int id) async {
+  Future<void> getAllAgents(String id) async {
     //pseudo,pwd,profil, etat
     //print(id);
-    //?_c=user&_a=select&id_agence=
+    //?_c=user&_a=select&id_ets=
     //&pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&etat=${e['etat']}
-    d.Response rep =
-        await requete.getE("/api/?_c=user&_a=select&id_agence=$id");
+    d.Response rep = await requete.getE("user/select?id_ets=$id");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
-      //print("data: ${rep.data}");
+      print("data: ${rep.data}");
       //return jsonDecode(rep.data);
       change(jsonDecode(rep.data), status: RxStatus.success());
       //box.write("user", rep.data);
@@ -145,9 +167,8 @@ class AgentController extends GetxController with StateMixin<List> {
     //
     change([], status: RxStatus.loading());
     //
-    print("/api/?_c=user&_a=select&profil=$profil");
-    d.Response rep =
-        await requete.getE("/api/?_c=user&_a=select&profil=$profil");
+    print("user/select?profil=$profil");
+    d.Response rep = await requete.getE("user/select?profil=$profil");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       print(rep.data);
       //box.write("user", rep.data);

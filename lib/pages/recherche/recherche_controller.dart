@@ -45,7 +45,7 @@ class RechercheController extends GetxController with StateMixin<List> {
     //
     print("la requete: $r");
     change([], status: RxStatus.loading());
-    d.Response rep = await requete.getE("/api/?_c=form&_a=select&$r");
+    d.Response rep = await requete.getE("api/?_c=form&_a=select&$r");
     //
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       print("la rep du serveur: ${rep.data}");

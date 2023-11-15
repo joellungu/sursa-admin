@@ -4,8 +4,8 @@ import 'package:dio/dio.dart' as d;
 final dio = d.Dio();
 
 class Requete extends GetConnect {
-  //static String url = "https://www.sky-workspace.com/sursa";
-  static String url = "http://192.168.1.185/www/sursa";
+  static String url = "https://www.api.sursa.cd";
+  //static String url = "http://192.168.1.185/www/sursa";
   //static String url = "http://10.0.2.2:8080";
   //static String ws = "ws://10.0.2.2:8080";
   Future<d.Response> getE(String path) async {

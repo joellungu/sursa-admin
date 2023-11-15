@@ -36,7 +36,7 @@ class Accueil extends StatelessWidget {
         toolbarHeight: 20,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.red.shade900,
-        title: Text(
+        title: const Text(
           "Système de gestion de surveillance sanitaire des voyageurs internationaux entrants en RDC",
           style: TextStyle(
             fontSize: 10,
@@ -97,7 +97,7 @@ class Accueil extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 15,
               ),

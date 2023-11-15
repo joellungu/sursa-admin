@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sursa_admin/pages/accueil.dart';
 import 'package:sursa_admin/pages/extraction/extraction_controller.dart';
 import 'package:sursa_admin/pages/splash.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'pages/agents/agent_controller.dart';
 import 'pages/agents/details_agent.dart';
@@ -11,6 +12,23 @@ import 'pages/recherche/recherche_controller.dart';
 import 'utils/app_controller.dart';
 
 void main() async {
+  //
+  //
+  WidgetsFlutterBinding.ensureInitialized();
+  // Must add this line.
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(1200, 800),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.normal,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
   //
   //
   LoginController loginController = Get.put(LoginController());
@@ -35,8 +53,8 @@ class MyApp extends StatelessWidget {
       ),
       home:
           //DetailsAgent({}),
-          Accueil(),
-      //Splash(),
+          //    Accueil(),
+          Splash(),
     );
   }
 }

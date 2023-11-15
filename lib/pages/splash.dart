@@ -14,6 +14,10 @@ class Splash extends StatelessWidget {
     var box = GetStorage();
     //Map agent = box.read("agent") ?? {};
     Timer(const Duration(seconds: 3), () {
+      Map user = box.read("user") ?? {};
+      //
+      print("user: $user");
+      //
       Get.off(Login());
     });
   }

@@ -15,7 +15,7 @@ class Agents extends GetView<AgentController> {
     var box = GetStorage();
     //
     Map user = box.read("user") ?? {};
-    controller.getAllAgents(user['id_agence']);
+    controller.getAllAgents("${user['id_ets']}");
   }
   //
   @override
@@ -111,7 +111,7 @@ class Agents extends GetView<AgentController> {
                           Map e = l[index];
                           print("Map: $e");
                           return Obx(() {
-                            if ("${e['pseudo']}"
+                            if ("${e['nom']}"
                                     .toLowerCase()
                                     .contains(noms.value.toLowerCase()) &&
                                 "${e['profil']}" != "Admin") {
@@ -122,7 +122,7 @@ class Agents extends GetView<AgentController> {
                                   //
                                 },
                                 leading: const Icon(Icons.person),
-                                title: Text("${e['pseudo']}"),
+                                title: Text("${e['nom']}"),
                                 subtitle: Text("${e['email']}"),
                               );
                             } else {

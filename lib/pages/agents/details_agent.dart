@@ -60,7 +60,9 @@ class _DetailsAgent extends State<DetailsAgent> {
     //
     super.initState();
     //
-    frontier = RxInt(widget.agent['id_poste']);
+    frontier = RxInt(int.parse("${widget.agent['id_poste']}"));
+    //
+    print("agent: ${widget.agent}");
     //
     statut.value = "${widget.agent['statut']}" == "actif";
     print("maj:: ${"${widget.agent['statut']}" == "actif"}");
@@ -139,7 +141,7 @@ class _DetailsAgent extends State<DetailsAgent> {
                   ListTile(
                     leading: Icon(Icons.person),
                     title: Text("agence"),
-                    subtitle: Text("${widget.agent['id_agence']}"),
+                    subtitle: Text("${widget.agent['id_ets']}"),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -269,7 +271,7 @@ class _DetailsAgent extends State<DetailsAgent> {
                         "pwd": "${widget.agent['pwd']}",
                         "profil": "Agent",
                         "statut": statut.value ? "actif" : "non actif",
-                        "id_agence": "${widget.agent['id_agence']}",
+                        "id_ets": "${widget.agent['id_ets']}",
                         "id_poste": frontier.value,
                       };
                       //

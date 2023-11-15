@@ -11,10 +11,13 @@ class FormulaireAgent extends StatelessWidget {
     //
     user = box.read("user") ?? {};
     //
-    agence.value = user['id_agence'];
+    agence.value = user['id_ets'].runtimeType == String
+        ? int.parse(user['id_ets'])
+        : user['id_ets'];
   }
   //
   final formKey = GlobalKey<FormState>();
+  final nom = TextEditingController();
   final pseudo = TextEditingController();
   final telephone = TextEditingController();
   final email = TextEditingController();
@@ -102,15 +105,15 @@ class FormulaireAgent extends StatelessWidget {
                             height: 10,
                           ),
                           TextFormField(
-                            controller: pseudo,
+                            controller: nom,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(vertical: 5),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               prefixIcon: const Icon(Icons.person),
-                              hintText: 'nom'.tr,
-                              labelText: 'nom'.tr,
+                              hintText: 'Noms'.tr,
+                              labelText: 'Noms'.tr,
                             ),
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -126,6 +129,31 @@ class FormulaireAgent extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
+                          // TextFormField(
+                          //   controller: pseudo,
+                          //   decoration: InputDecoration(
+                          //     contentPadding: EdgeInsets.symmetric(vertical: 5),
+                          //     border: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.circular(20),
+                          //     ),
+                          //     prefixIcon: const Icon(Icons.person),
+                          //     hintText: 'pseudo'.tr,
+                          //     labelText: 'pseudo'.tr,
+                          //   ),
+                          //   validator: (value) {
+                          //     if (value!.isEmpty) {
+                          //       return 'nom_message'.tr;
+                          //     }
+
+                          //     return null;
+                          //   },
+                          //   onChanged: (value) {
+                          //     //print("Password value $value");
+                          //   },
+                          // ),
+                          // const SizedBox(
+                          //   height: 20,
+                          // ),
                           TextFormField(
                             controller: telephone,
                             decoration: InputDecoration(
@@ -203,7 +231,7 @@ class FormulaireAgent extends StatelessWidget {
                                           // ),
                                           DropdownMenuItem(
                                             value: 1,
-                                            child: Text("Admin"),
+                                            child: Text("S-Agent"),
                                           ),
                                           DropdownMenuItem(
                                             value: 2,
@@ -384,7 +412,7 @@ class FormulaireAgent extends StatelessWidget {
                                             Map e = {};
                                             ll.forEach((element) {
                                               if (element['id'] ==
-                                                  agence.value) {
+                                                  "${agence.value}") {
                                                 e = element;
                                               }
                                             });
@@ -562,36 +590,37 @@ class FormulaireAgent extends StatelessWidget {
                     if (formKey.currentState!.validate()) {
                       Map u = {};
                       if ([
-                            "Admin",
-                            "Agent",
+                            "s-agent",
+                            "agent",
                           ][c.value - 1] ==
-                          "Admin") {
+                          "s-agent") {
                         u = {
-                          //"id": 2,
+                          "nom": nom.text,
                           "pseudo": pseudo.text,
                           "telephone": telephone.text,
                           "email": email.text,
                           "pwd": "123456789",
                           "profil": [
-                            "Admin",
-                            "Agent",
+                            "s-agent",
+                            "agent",
                           ][c.value - 1],
                           "statut": "non actif",
-                          "id_agence": agence.value,
+                          "id_ets": agence.value,
+                          "id_poste": l[frontier.value]['id'],
                         };
                       } else {
                         u = {
-                          //"id": 2,
+                          "nom": nom.text,
                           "pseudo": pseudo.text,
                           "telephone": telephone.text,
                           "email": email.text,
                           "pwd": "123456789",
                           "profil": [
-                            "Admin",
-                            "Agent",
+                            "s-agent",
+                            "agent",
                           ][c.value - 1],
                           "statut": "non actif",
-                          "id_agence": agence.value,
+                          "id_ets": agence.value,
                           "id_poste": l[frontier.value]['id'],
                         };
                       }

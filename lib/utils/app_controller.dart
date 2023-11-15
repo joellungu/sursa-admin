@@ -17,40 +17,18 @@ class AppController extends GetxController {
   Future<void> login(Map e) async {
     //pseudo,pwd,profil, etat
     print(
-        "${Requete.url}///api/?_c=user&_a=login&pseudo=${e['pseudo']}&pwd=${e['pwd']}");
+        "${Requete.url}/user/login?email=${e['email']}&pwd=${e['pwd']}&profil=admin");
     //
     d.Response rep = await requete
-        .getE("/api/?_c=user&_a=login&pseudo=${e['pseudo']}&pwd=${e['pwd']}");
+        .getE("user/login?email=${e['email']}&pwd=${e['pwd']}&profil=admin");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //
       print("rep: ${rep.data}");
       Map e = jsonDecode(rep.data);
       //
-      if (e["statut"] != null) {
+      if (e["etat"] == "actif") {
         //
-        if (e["profil"] == "Agent") {
-          //
-          if (e["statut"] == "non actif") {
-            print(rep.data);
-            //
-            Get.back();
-            Get.snackbar(
-              "Compte",
-              "Votre compte n'est pas actif veuillez contacter votre administrateur",
-              backgroundColor: Colors.red.shade700,
-              colorText: Colors.white,
-            );
-            //
-          } else {
-            box.write("user", json.decode(rep.data));
-
-            //
-            //box.write("user", rep.body);
-            Get.back();
-            Get.snackbar("Succès", "L'authentification éffectué !");
-            Get.offAll(Accueil());
-          }
-        } else {
+        if (e["profil"] == "admin" || e["profil"] == "S-Agent") {
           //
           print(rep.data);
           //
@@ -61,12 +39,28 @@ class AppController extends GetxController {
           Get.back();
           Get.snackbar("Succès", "L'authentification éffectué !");
           Get.offAll(Accueil());
+        } else {
+          //
+          print(rep.data);
+          //
+          box.write("user", json.decode(rep.data));
+
+          //
+          //box.write("user", rep.body);
+          Get.back();
+          Get.snackbar(
+            "Erreur",
+            "Vous n'etes pas un administrateur",
+            colorText: Colors.white,
+            backgroundColor: Colors.red.shade900,
+          );
+          //Get.offAll(Accueil());
         }
       } else {
         Get.back();
         Get.snackbar(
           "Oups",
-          "Compte non valide",
+          "Compte non actif",
           colorText: Colors.white,
           backgroundColor: Colors.red.shade900,
         );
@@ -87,7 +81,7 @@ class AppController extends GetxController {
   Future<void> enregistrement(Map e) async {
     //pseudo,pwd,profil, etat
     d.Response rep = await requete.getE(
-        "/api/user/insert?pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&etat=${e['etat']}");
+        "user/insert?pseudo=${e['pseudo']}&pwd=${e['pwd']}&profil=${e['profil']}&etat=${e['etat']}");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //box.write("user", rep.body);
       Get.back();
@@ -101,9 +95,8 @@ class AppController extends GetxController {
 
   //
   Future<void> listeAll(String profil) async {
-    print("/api/?_c=user&_a=select&profil=$profil");
-    d.Response rep =
-        await requete.getE("/api/?_c=user&_a=select&profil=$profil");
+    print("user?select&profil=$profil");
+    d.Response rep = await requete.getE("user?select&profil=$profil");
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       //box.write("user", rep.body);
       Get.back();
@@ -112,6 +105,32 @@ class AppController extends GetxController {
     } else {
       Get.back();
       Get.snackbar("Erreur", "Un problème lors de la suppression");
+    }
+  }
+
+  //
+  //
+  Future<void> mdpOublier(String email) async {
+    print("user?forgot&email=$email");
+    //print(
+    //  "rep:  https://www.sky-workspace.com/sursa/?_c=form&_a=get&id=$id");
+    d.Response rep = await requete.getE(
+      "user?forgot&email=$email",
+    );
+    if (rep.statusCode == 200 || rep.statusCode == 201) {
+      // print("rep: ${rep.statusCode} == $id == $id_user");
+      print("rep: ${rep.data}");
+
+      //box.write("user", rep.body);
+
+      Get.back();
+      Get.snackbar("Succès",
+          "Un email a été envoyé dans votre compte pour reeinitialiser votre mot de passe");
+      //Get.to(Details(jsonDecode(rep.data)));
+    } else {
+      print("rep: ${rep.data}");
+      //Get.back();
+      Get.snackbar("Erreur", "Un problème lors de la vérification");
     }
   }
   //

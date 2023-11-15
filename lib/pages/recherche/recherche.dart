@@ -33,9 +33,11 @@ class Recherche extends GetView<RechercheController> {
   //
   RxList companies = [].obs;
   RxList paysVisites = [].obs;
+  RxList paysOrigines = [].obs;
   //
   RxInt companie = 1.obs;
   RxInt paysVisite = 1.obs;
+  RxInt paysOrigine = 1.obs;
   RxBool companieBool = false.obs;
   RxBool paysVisiteBool = false.obs;
 
@@ -109,7 +111,7 @@ class Recherche extends GetView<RechercheController> {
                                 children: [
                                   IconButton(
                                     onPressed: () {},
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.woman,
                                       color: Colors.grey,
                                     ),
@@ -153,7 +155,7 @@ class Recherche extends GetView<RechercheController> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
@@ -320,52 +322,118 @@ class Recherche extends GetView<RechercheController> {
                             alignment: Alignment.centerLeft,
                             child: Text("Pays d'origine"),
                           ),
-                          Obx(
-                            () => Container(
-                              height: 50,
-                              // ignore: sort_child_properties_last
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.manage_accounts,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<int>(
-                                        items: const [
-                                          //"Chauffeur","Receveur","Embarqueur"
-                                          DropdownMenuItem(
-                                            child: Text("Admin"),
-                                            value: 1,
-                                          ),
-                                          DropdownMenuItem(
-                                            child: Text("Agent"),
-                                            value: 2,
-                                          ),
-                                        ],
-                                        onChanged: (e) {
-                                          c.value = e as int;
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 8,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      width: Get.size.width / 2.1,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      child: FutureBuilder(
+                                        future: agentController.getPays(),
+                                        builder: (c, t) {
+                                          if (t.hasData) {
+                                            //
+                                            List ll = t.data as List;
+                                            paysOrigines = ll.obs;
+                                            //Map e = {};
+                                            // ll.forEach((element) {
+                                            //   if (element['id'] == agence.value) {
+                                            //     e = element;
+                                            //   }
+                                            // });
+                                            //print("la liste de trucs2: $l");
+
+                                            //
+                                            return Obx(
+                                              () => DropdownButtonHideUnderline(
+                                                child: DropdownButton<int>(
+                                                  isExpanded: true,
+                                                  onChanged: (c) {
+                                                    //
+                                                    paysOrigine.value =
+                                                        c as int;
+                                                  },
+                                                  value: paysVisite.value,
+                                                  items: List.generate(
+                                                      paysOrigines.length,
+                                                      (index) {
+                                                    String pays =
+                                                        paysOrigines[index];
+                                                    return DropdownMenuItem(
+                                                      value: index,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            text: pays,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 13,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            // children: [
+                                                            //   TextSpan(
+                                                            //     text:
+                                                            //         "Province: ${e['province']}",
+                                                            //     style: const TextStyle(
+                                                            //         fontSize:
+                                                            //             13,
+                                                            //         fontWeight:
+                                                            //             FontWeight
+                                                            //                 .bold),
+                                                            //   ),
+                                                            // ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                                ),
+                                              ),
+                                            );
+                                          } else if (t.hasError) {
+                                            return Container();
+                                          }
+                                          return Container(
+                                            height: 40,
+                                            width: 40,
+                                            alignment: Alignment.center,
+                                            child:
+                                                const CircularProgressIndicator(),
+                                          );
                                         },
-                                        value: c.value,
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey,
+                                  ),
                                 ),
                               ),
-                            ),
+                              Expanded(
+                                flex: 2,
+                                child: Obx(
+                                  () => Checkbox(
+                                    onChanged: (t) {
+                                      paysVisiteBool.value = t!;
+                                    },
+                                    value: paysVisiteBool.value,
+                                  ),
+                                ),
+                              )
+                            ],
                           )
                         ],
                       ),
@@ -406,7 +474,7 @@ class Recherche extends GetView<RechercheController> {
                                             //
                                             List ll = t.data as List;
                                             paysVisites = ll.obs;
-                                            Map e = {};
+                                            //Map e = {};
                                             // ll.forEach((element) {
                                             //   if (element['id'] == agence.value) {
                                             //     e = element;
@@ -527,7 +595,7 @@ class Recherche extends GetView<RechercheController> {
                                         ),
                                       ),
                                       child: FutureBuilder(
-                                        future: agentController.getPays(),
+                                        future: agentController.getCompagnies(),
                                         builder: (c, t) {
                                           if (t.hasData) {
                                             //
@@ -740,7 +808,7 @@ class Recherche extends GetView<RechercheController> {
                 child: Container(
                   alignment: Alignment.center,
                   width: double.maxFinite,
-                  child: Text("Rechercher"),
+                  child: const Text("Rechercher"),
                 ),
               )
             ],

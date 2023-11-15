@@ -25,7 +25,7 @@ class ExtractionController extends GetxController with StateMixin<String> {
     String myUrl = Requete.url;
 
     d.Response rep = await requete.getE(
-        "api/?_c=form&_a=export&date_creat_a=$date_create_a&date_creat_b=$date_create_b");
+        "form/export?date_creat_a=$date_create_a&date_creat_b=$date_create_b");
 
     if (rep.statusCode == 200 || rep.statusCode == 201) {
       print("cool tout ok ${rep.data}");
